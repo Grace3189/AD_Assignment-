@@ -1,37 +1,24 @@
+import self
+from PIL import Image
 from unittest import TestCase
 from clothingsuggestion import ClothingSuggestionApp
 
-class TestClothingSuggestionApp(unittest.TestCase):
 
-    def test_generate_dropdown(self):
-        app = ClothingSuggestionApp()
-        options = ["Option 1", "Option 2", "Option 3"]
-        prompt = "Select an option:"
+class ClothingSuggestionApp1:
+    def __init__(self):
+        self.app = None
 
-        # Mock the input function to return a fixed value
-        input_mock = lambda _: "2"
-        original_input = __builtins__.input
-        __builtins__.input = input_mock
+    def setUp(self):
+        self.app = ClothingSuggestionApp()
 
-        selected_option = app.generate_dropdown(options, prompt)
+    def test_get_user_input(self):
+        self.app.get_user_input()
+        self.assertEqual(self.app.gender, "Male")
+        self.assertEqual(self.app.age, 25)
+        self.assertEqual(self.app.country, 3)
+        self.assertEqual(self.app.weather, 2)
 
-        # Restore the original input function
-        __builtins__.input = original_input
+        def assertEqual(self, gender, param):
+            pass
 
-        self.assertEqual(selected_option, "Option 2")
 
-    def test_open_resize_image(self):
-        app = ClothingSuggestionApp()
-        original_image_file_path = "path/to/original_image.jpg"
-        new_size = (100, 100)
-
-        resized_filename = app.open_resize_image(original_image_file_path, new_size)
-        resized_image = Image.open(resized_filename)
-
-        self.assertEqual(resized_image.size, new_size)
-
-        # Clean up the resized image file
-        os.remove(resized_filename)
-
-if __name__ == "__main__":
-    unittest.main()

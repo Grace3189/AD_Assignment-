@@ -1,7 +1,5 @@
 from PIL import Image
 import os
-import requests
-
 
 class ClothingSuggestionApp:
     def __init__(self):
@@ -29,22 +27,15 @@ class ClothingSuggestionApp:
         resized_filename = f"{filename}_resized{extension}"
         resized_image = image.resize(new_size)
         resized_image.save(resized_filename)
-        return resized_filename
+        resized_image.show()
 
     def get_user_input(self):
         self.gender = input("Enter your gender (Male/Female): ")
         self.age = int(input("Enter your age: "))
-        countries = ["Indonesia", "Singapore", "North Korea", "Japan", "Malaysia", "Other"]
+        countries = ["Malaysia", "Indonesia", "Singapore", "Japan", "Korea", "Other"]
         self.country = self.generate_dropdown(countries, "Select your country:")
-
-        # Use the requests API to fetch weather data
-        try:
-            response = requests.get("https://openweathermap.org/api")
-            weather_data = response.json()
-            self.weather = weather_data.get("weather", "other")
-        except Exception as e:
-            print(f"Error fetching weather data: {str(e)}")
-            self.weather = "other"
+        weathers = ["sunny", "cloudy", "rainy", "snowy", "windy", "other"]
+        self.weather = self.generate_dropdown(weathers, "Select your current weather:")
 
     def suggest_clothes(self):
         suggestion = ""
@@ -54,13 +45,12 @@ class ClothingSuggestionApp:
         elif self.gender.lower() == "female":
             suggestion += "woman " if self.age > 18 else "girls "
 
-
         weather_options = {
-            "sunny": ("shorts and t-shirt", "sunny.jpg", (400, 600)),
-            "cloudy": ("denim jacket and pants", "cloudy.jpg", (400, 600)),
-            "rainy": ("raincoat and umbrella", "rainy.jpg", (400, 600)),
-            "snowy": ("waterproof insulated jackets and pants", "snowy.jpg", (400, 600)),
-            "windy": ("windproof hoodie and jean pants", "windy.jpg", (400, 600)),
+            "sunny": ("short and t-shirt", "sunny.jpg", (400, 600)),
+            "cloudy": ("light jacket and pant", "cloudy.jpg", (400, 600)),
+            "rainy": ("water proof jacket and pant", "rainy.jpg", (400, 600)),
+            "snowy": ("winter insulated jacket and pant", "snowy.jpg", (400, 600)),
+            "windy": ("windproof jacket and pants", "windy.jpg", (400, 600)),
             "other": ("business casual", "business_casual.jpg", (400, 600)),
         }
 
@@ -75,16 +65,9 @@ class ClothingSuggestionApp:
 
     def display_suggestion(self, suggestion):
         print(f"Based on the information you provided, we suggest '{suggestion}', considering your preferences.")
-        print(f"Resized Image: {self.image}")
-
 
 if __name__ == "__main__":
-    while True:
-        app = ClothingSuggestionApp()
-        app.get_user_input()
-        suggested_clothes = app.suggest_clothes()
-        app.display_suggestion(suggested_clothes)
-
-        repeat = input("Do you want to get another clothing suggestion? (yes/no): ").lower()
-        if repeat != "yes":
-            break
+    app = ClothingSuggestionApp()
+    app.get_user_input()
+    suggested_clothes = app.suggest_clothes()
+    app.display_suggestion(suggested_clothes)
